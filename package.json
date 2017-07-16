@@ -1,0 +1,28 @@
+{
+  "name": "devflow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Jo <jo@redcat.ninja> (https://redcat.ninja)",
+  "license": "MIT",
+  "dependencies": {
+    "livereload": "^0.6.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/redcatjs/devflow.git"
+  },
+  "keywords": [
+    "dev",
+    "node",
+    "babel",
+    "nodemon",
+    "webpack",
+    "nodejs"
+  ],
+  "bugs": {
+    "url": "https://github.com/redcatjs/devflow/issues"
+  },
+  "homepage": "https://github.com/redcatjs/devflow"
+}
