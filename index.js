@@ -32,16 +32,17 @@ class devbox {
 		this.handleExit();
 
 		this.runBabel();
-		setTimeout(function(){
-			self.runNodemon();
-		},1000);
+		self.runNodemon();
 		this.runLivereload();
 
 	}
 	
 	runBabel(){
-		const { exec } = require('child_process');
-		exec( path.resolve('node_modules/babel-cli/bin/babel.js')+' '+this.options.srcPath+' -d '+this.options.buildPath+' --watch --copy-files --source-maps inline' , function (error, stdout, stderr) {
+		const { exec, execSync } = require('child_process');
+		let babelBin = path.resolve('node_modules/babel-cli/bin/babel.js');
+		let cmd = babelBin+' '+this.options.srcPath+' -d '+this.options.buildPath+' --copy-files --source-maps inline';
+		execSync(cmd);
+		exec( cmd+' --watch --skip-initial-build' , function (error, stdout, stderr) {
 			console.log('stdout: ' + stdout);
 			console.log('stderr: ' + stderr);
 			if (error !== null) {
