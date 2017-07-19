@@ -1,6 +1,6 @@
 const path = require('path');
 
-class devbox {
+class devflow {
 	
 	constructor(options){
 		options = options || {};
@@ -39,6 +39,8 @@ class devbox {
 		this.runBabel();
 		this.runNodemon();
 		this.runLivereload();
+		
+		this.watchWebpack();
 
 	}
 	
@@ -68,42 +70,54 @@ class devbox {
 
 	runLivereload(){
 		this.log('livereload - start server');
-		const livereload = require('livereload').createServer();
+		const livereload = require('livereload').createServer({
+			delay: 500,
+			applyCSSLive: true,
+			applyImgLive: true,
+			usePolling: true,
+		});
 		livereload.watch([ path.resolve(this.options.distPath) ]);
 	}
 	
 	runWebpack(){
-		this.log('webpack - run compilation and start watcher');
+		this.log('webpack - compilation');
 		const webpack = require('webpack');
-		let webpackConfig = require(path.resolve('webpack.config.js'));
-		let webpackCompiler = webpack(webpackConfig);
+		let config = require(path.resolve('webpack.config.js'));
 		
 		let lastHash;
 		let outputOptions = { colors: { level: 2, hasBasic: true, has256: true, has16m: false } };
-		function compilerCallback(err, stats) {
-			if(!webpackConfig.watch || err) {
-				// Do not keep cache anymore
-				webpackCompiler.purgeInputFileSystem();
-			}
+		
+		//config.watch = true;
+		
+		webpack(config, function(err, stats) {
 			if(err) {
 				lastHash = null;
 				console.error(err.stack || err);
 				if(err.details) console.error(err.details);
 				process.exit(1); // eslint-disable-line
 			}
-			if(stats.hash !== lastHash) {
+			if(stats.hash !== lastHash){
 				lastHash = stats.hash;
 				process.stdout.write(stats.toString(outputOptions) + "\n");
 			}
-			if(!webpackConfig.watch && stats.hasErrors()) {
+			if(!config.watch && stats.hasErrors()) {
 				process.on("exit", function() {
 					process.exit(2); // eslint-disable-line
 				});
 			}
-		}
-		
-		webpackCompiler.run(compilerCallback);
+		});
+	}
+	
+	watchWebpack(){
+		this.log('webpack - start watcher');
+		const watch = require('node-watch');
+		const self = this;
+		watch(this.options.buildPath, { recusive: true }, function(e, name){
+			if(name.split('.').pop()!='js'){
+				self.runWebpack();
+			}
+		});
 	}
 }
 
-module.exports = devbox;
+module.exports = devflow;
