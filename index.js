@@ -27,33 +27,27 @@ class devbox {
 	}
 	
 	run(){
-		let self = this;
 		this.setEnv();
 		this.handleExit();
 
 		this.runBabel();
-		self.runNodemon();
+		this.runNodemon();
 		this.runLivereload();
 
 	}
 	
 	runBabel(){
-		const { exec, execSync } = require('child_process');
+		console.log('babel - compilation');
+		const { spawn, execSync } = require('child_process');
 		let babelBin = path.resolve('node_modules/babel-cli/bin/babel.js');
-		let cmd = babelBin+' '+this.options.srcPath+' -d '+this.options.buildPath+' --copy-files --source-maps inline';
-		execSync(cmd);
-		exec( cmd+' --watch --skip-initial-build' , function (error, stdout, stderr) {
-			console.log('stdout: ' + stdout);
-			console.log('stderr: ' + stderr);
-			if (error !== null) {
-				console.log('exec error: ' + error);
-			}
-		});
+		let args = [ this.options.srcPath, '-d '+this.options.buildPath, '--copy-files', '--source-maps inline' ];
+		execSync(babelBin+' '+args.join(' '), { stdio: 'inherit' });
+		
+		spawn( babelBin, [...args, '--watch','--skip-initial-build'], { stdio: 'inherit' } );
 	}
 
 	runNodemon(){
-		//var cli = require('nodemon/lib/cli');
-		//var options = cli.parse(process.argv);
+		console.log('nodemon - start');
 		const nodemon = require('nodemon')({
 			watch: [ this.options.buildPath ],
 			script: this.options.serverScript,
@@ -64,11 +58,13 @@ class devbox {
 	}
 
 	runLivereload(){
+		console.log('livereload - start server');
 		const livereload = require('livereload').createServer();
 		livereload.watch([ path.resolve(this.options.distPath) ]);
 	}
 	
 	runWebpack(){
+		console.log('webpack - run compilation and start watcher');
 		const webpack = require('webpack');
 		let webpackConfig = require(path.resolve('webpack.config.js'));
 		let webpackCompiler = webpack(webpackConfig);
