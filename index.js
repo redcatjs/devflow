@@ -46,10 +46,12 @@ class devbox {
 		this.log('babel - compilation');
 		const { spawn, execSync } = require('child_process');
 		let babelBin = path.resolve('node_modules/babel-cli/bin/babel.js');
-		let args = [ this.options.srcPath, '-d '+this.options.buildPath, '--copy-files', '--source-maps inline' ];
+		let args = [ this.options.srcPath, '-d',this.options.buildPath, '--copy-files', '--source-maps inline' ];
 		execSync(babelBin+' '+args.join(' '), { stdio: 'inherit' });
 		
+		this.log('babel - start watcher');
 		spawn( babelBin, [...args, '--watch','--skip-initial-build'], { stdio: 'inherit' } );
+		
 	}
 
 	runNodemon(){
