@@ -1,4 +1,8 @@
 #!/usr/bin/env node
 
-const devbox = new (require('../index'))();
-devbox.run();
+process.on('SIGINT', function(){ //catch CTRL+C and let's exit
+	process.exit();
+});
+
+const devflow = new (require('../index'))();
+devflow.run();
