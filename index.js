@@ -15,6 +15,12 @@ class devbox {
 		});
 	}
 	
+	log(...log){
+		log.unshift("\x1b[31m"); //set fg color to red
+		log.push("\x1b[0m"); //reset color
+		console.log(...log);
+	}
+	
 	setEnv(){
 		process.env.NODE_ENV = 'developement';
 		process.env.NODE_PATH = this.options.buildPath;
@@ -37,7 +43,7 @@ class devbox {
 	}
 	
 	runBabel(){
-		console.log('babel - compilation');
+		this.log('babel - compilation');
 		const { spawn, execSync } = require('child_process');
 		let babelBin = path.resolve('node_modules/babel-cli/bin/babel.js');
 		let args = [ this.options.srcPath, '-d '+this.options.buildPath, '--copy-files', '--source-maps inline' ];
@@ -47,24 +53,25 @@ class devbox {
 	}
 
 	runNodemon(){
-		console.log('nodemon - start');
+		this.log('nodemon - start');
 		const nodemon = require('nodemon')({
 			watch: [ this.options.buildPath ],
 			script: this.options.serverScript,
 		});
+		const self = this;
 		nodemon.on('restart',function(){
-			console.log("nodemon restart \n");
+			self.log("nodemon restart \n");
 		});
 	}
 
 	runLivereload(){
-		console.log('livereload - start server');
+		this.log('livereload - start server');
 		const livereload = require('livereload').createServer();
 		livereload.watch([ path.resolve(this.options.distPath) ]);
 	}
 	
 	runWebpack(){
-		console.log('webpack - run compilation and start watcher');
+		this.log('webpack - run compilation and start watcher');
 		const webpack = require('webpack');
 		let webpackConfig = require(path.resolve('webpack.config.js'));
 		let webpackCompiler = webpack(webpackConfig);
