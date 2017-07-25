@@ -279,24 +279,12 @@ class devflow {
 						loader: "json-loader"
 					},
 					{
-						test: /\.(jpg|png|svg)$/,
+						test: /\.(jpg|png|svg|eot|ttf|woff|woff2)$/,
 						use: [{
 							loader: 'file-loader',
 							options: {
-								name: 'images/[name].[hash].[ext]',
-								outputPath: '/',
-								publicPath: 'assets/',
-							}
-						}],
-					},
-					
-					{
-						test: /\.(eot|svg|ttf|woff|woff2)$/,
-						use: [{
-							loader: 'file-loader',
-							options: {
-								name: 'fonts/[name].[hash].[ext]',
-								outputPath: '',
+								name: '[name].[hash].[ext]',
+								outputPath: 'assets/',
 								publicPath: '',
 							}
 						}],
