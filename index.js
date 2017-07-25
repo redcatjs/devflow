@@ -4,6 +4,9 @@ const { spawn, execSync, exec } = require('child_process');
 const chalk = require('chalk');
 const http = require('http');
 const hashFiles = require('hash-files');
+const webpack = require('webpack');
+const webpackMerge = require('webpack-merge');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 process.NODE_ENV = 'developement';
 
@@ -13,9 +16,10 @@ class devflow {
 		options = options || {};
 		this.options = {
 			srcPath: 'app',
-			buildPath: 'dist.server',
-			distPath: 'dist.client',
-			serverScript: 'dist.server/server.js',
+			distServer: 'dist.server',
+			distServerScript: 'server.js',
+			distClient: 'dist.client',
+			distClientScript: 'client.js',
 			serverPort: 3000,
 		};
 		Object.keys(options).forEach(function(k){
@@ -78,7 +82,7 @@ class devflow {
 	runBabel(){
 		this.log('babel - compilation');
 		let babelBin = path.resolve('node_modules/babel-cli/bin/babel.js');
-		let args = [ this.options.srcPath, '-d',this.options.buildPath, '--copy-files', '--source-maps inline' ];
+		let args = [ this.options.srcPath, '-d',this.options.distServer, '--copy-files', '--source-maps inline' ];
 		execSync(babelBin+' '+args.join(' '), { stdio: 'inherit' });
 		
 		this.log('babel - start watcher');
@@ -91,10 +95,10 @@ class devflow {
 	runNodemon(){
 		this.log('nodemon - start');
 		const nodemon = require('nodemon')({
-			watch: [ this.options.buildPath ],
-			script: this.options.serverScript,
+			watch: [ this.options.distServer ],
+			script: path.join(this.options.distServer,this.options.distServerScript),
 			env: Object.assign({},process.env,{
-				NODE_PATH: this.options.buildPath
+				NODE_PATH: this.options.distServer
 			}),
 		});
 		nodemon.on('restart',function(){
@@ -127,13 +131,13 @@ class devflow {
 					
 					this.log('send livereload to browser');
 					while(this.liveReloadPaths.length){
-						let path = this.liveReloadPaths.shift();
-						livereload.filterRefresh( path );
+						let fpath = this.liveReloadPaths.shift();
+						livereload.filterRefresh( fpath );
 					}
 				}
 			}.bind(this),100);
 		}.bind(this);
-		chokidar.watch([ path.resolve(this.options.distPath) ], {
+		chokidar.watch([ path.resolve(this.options.distClient) ], {
 			ignoreInitial: true,
 			usePolling: false,
 			awaitWriteFinish: true,
@@ -166,7 +170,6 @@ class devflow {
 		} );
 	}
 	runWebpackNode(){
-		const webpack = require('webpack');
 		let config = require(path.resolve('webpack.config.js'));
 		
 		let lastHash;
@@ -190,6 +193,263 @@ class devflow {
 					process.exit(2);
 				});
 			}
+		});
+	}
+	
+	
+	webpackConfig(config, extra){
+		process.env.NODE_ENV = process.env.NODE_ENV || "development";
+
+		let configDefault = {
+			
+			context: path.resolve(process.cwd(), this.options.srcPath),
+			entry: {
+				app: [ './'+this.options.distClientScript ],
+			},
+			output: {
+				path: path.resolve(this.options.distClient),
+				filename: this.revisionFile('[name].js'),
+				publicPath: this.options.distClient+'/',
+			},
+			
+			resolve: {
+				symlinks: true,
+				alias: {},
+				modules: [
+					this.options.srcPath,
+					'node_modules',
+				],
+			},
+			
+			plugins: [
+				new webpack.optimize.CommonsChunkPlugin({
+					name: 'vendor',
+					filename: this.revisionFile("vendor.js"),
+					minChunks: function(module) {
+						return module.resource && ( /node_modules/.test(module.resource) || /vendor/.test(module.resource) );
+					}
+				}),			
+				new ExtractTextPlugin( this.revisionFile( '[name].css' ) ),
+			],
+			
+			module: {
+				rules: [
+					{
+						test: /\.js?$/,
+						exclude: /node_modules/,
+						loader: "babel-loader",
+						query: {
+							plugins: [
+								'transform-class-properties',
+								'transform-runtime'
+							],
+							presets: ['stage-0']
+						}
+					},
+					{
+						test: /\.php$/,
+						use: [
+							{
+								loader: 'webpack-php-loader',
+								options: {
+									//debug: true
+								}
+							}
+						]
+					},
+					{
+						test: /\.css$/,
+						use: ExtractTextPlugin.extract({
+							fallback: 'style-loader',
+							use: 'css-loader',
+						}),
+					},
+					{
+						test: /\.(sass|scss)$/,
+						use: ExtractTextPlugin.extract({
+							fallback: 'style-loader',
+							use: [
+								'css-loader',
+								'sass-loader',
+							]
+						}),
+					},
+					{
+						test: /\.json$/,
+						loader: "json-loader"
+					},
+					{
+						test: /\.(jpg|png|svg)$/,
+						use: [{
+							loader: 'file-loader',
+							options: {
+								name: 'images/[name].[hash].[ext]',
+								outputPath: '/',
+								publicPath: 'assets/',
+							}
+						}],
+					},
+					
+					{
+						test: /\.(eot|svg|ttf|woff|woff2)$/,
+						use: [{
+							loader: 'file-loader',
+							options: {
+								name: 'fonts/[name].[hash].[ext]',
+								outputPath: '',
+								publicPath: '',
+							}
+						}],
+					},
+					
+					{
+						test: /\.(ejs)$/,
+						use: [{
+							loader: 'ejs-compiled-loader',
+							options: {
+								htmlmin: true, // or enable here  
+								htmlminOptions: {
+									removeComments: true
+								}
+							}
+						}],
+					},
+					
+					{
+						test: /\.(html)$/,
+						use: [{
+							loader: 'html-loader',
+							options: {
+								minimize: true
+							}
+						}],
+					},
+				],
+			},
+		};
+
+		if(process.env.NODE_ENV==="production"){
+			configDefault.devtool = 'source-map';
+		}
+		else{
+			configDefault.devtool = 'eval-cheap-module-source-map';
+		}
+		
+		config = webpackMerge(configDefault, config || {});
+		
+		if(extra){
+			if(extra.shimDependencies){
+				this.shimDependencies(config, extra.shimDependencies);
+			}
+			
+			if(extra.exposeJquery){
+				config.plugins.push(new webpack.ProvidePlugin({
+					"$": 'jquery',
+					"jQuery": 'jquery',
+					"window.$": "jquery",
+					"window.jQuery": "jquery",
+				}));
+				config.module.rules.push({
+					test: require.resolve('jquery'),
+					use: [{
+						  loader: 'expose-loader',
+						  options: 'jQuery'
+					  },{
+						  loader: 'expose-loader',
+						  options: '$'
+					  }]
+				});
+			}
+			
+			if(extra.disableAMD){
+				//disable AMD resolution for AMD/CJS module names mismatching (broken AMD)
+				if(extra.disableAMD===true){
+					//disable global AMD
+					config.module.rules.push({
+						test: /\.js/,
+						loader: 'imports-loader',
+						query:'define=>false',
+					});
+				}
+				else{
+					//disable specifics AMD
+					extra.disableAMD.forEach(function(lib){
+						config.module.rules.push({
+							test: require.resolve(lib),
+							loader: 'imports-loader',
+							query:'define=>false',
+						});
+					});
+				}
+			}
+			
+			
+			if(extra.writeDistRevision){
+				this.writeDistRevision();
+			}
+			
+			if(extra.debugConfig){
+				console.log(JSON.stringify(config, null, 2));
+			}
+		}
+		
+		
+		return config;
+	}
+	
+	getRevision(){
+		if(!this.revision){
+			this.revision = execSync('git rev-parse --short HEAD').toString().trim();
+		}
+		return this.revision;
+	}
+	revisionFile(file){
+		let x = file.split('.');
+		let ext = x.pop();
+		file = x.join('.')+'.'+this.getRevision()+'.'+ext;
+		return file;
+	}
+	makeDistPath(){
+		const distClient = this.options.distClient;
+		if(!fs.existsSync(distClient)){
+			fs.mkdirSync(distClient);
+		}
+	}
+	writeDistRevision(){
+		this.makeDistPath();
+		fs.writeFile(this.options.distClient+'/.revision', this.getRevision(), function (err) {
+			if(err){
+				throw err;
+			}
+		});
+	}
+	
+	resolveRelativePath(file, enforceAbsolute){
+		if(file.substr(0,2)=='./'||file.substr(0,3)=='../'){
+			file = path.resolve(file);
+		}
+		else if(enforceAbsolute){
+			file = require.resolve(file);
+		}
+		return file;
+	}
+	
+	shimDependencies(webpackConfig, dependencies){
+		Object.keys(dependencies).forEach(function(key){
+			let deps = dependencies[key];
+			let file = webpackConfig.resolve.alias[key] || key;
+			file = this.resolveRelativePath(file, true);
+			let query = {};
+			deps.forEach(function(dep,i){
+				dep = resolveRelativePath(dep);
+				let k = '__required._'+i;
+				query[k] = dep;
+			});
+			webpackConfig.module.rules.push({
+				test: file,
+				loader: 'imports-loader',
+				query: query,
+			});
 		});
 	}
 	
