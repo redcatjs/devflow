@@ -13,8 +13,8 @@ class devflow {
 		options = options || {};
 		this.options = {
 			srcPath: 'app',
-			buildPath: 'app.build',
-			distPath: 'app.dist',
+			buildPath: 'dist.server',
+			distPath: 'dist.client',
 			serverScript: 'app.build/server.js',
 			serverPort: 3000,
 		};
@@ -193,19 +193,6 @@ class devflow {
 		});
 	}
 	
-	triggerNodeLoaded(){
-		let nodemonLaunchingFilePath = 'app.dist/.nodemon-launching';
-		fs.exists(this.nodemonLaunchingFilePath, function(exists) {
-			if(exists) {
-				fs.unlink(this.nodemonLaunchingFilePath,function(err){
-					if(err){
-						console.error(err);
-					}
-				});
-			}
-		}.bind(this));
-	}
-
 }
 
 module.exports = devflow;
