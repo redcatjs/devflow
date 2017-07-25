@@ -15,7 +15,7 @@ class devflow {
 			srcPath: 'app',
 			buildPath: 'dist.server',
 			distPath: 'dist.client',
-			serverScript: 'app.build/server.js',
+			serverScript: 'dist.server/server.js',
 			serverPort: 3000,
 		};
 		Object.keys(options).forEach(function(k){
