@@ -20,6 +20,7 @@ class devflow {
 			distServerScript: 'server.js',
 			distClient: 'dist.client',
 			distClientScript: 'client.js',
+			publicPath: 'assets/',
 			serverPort: 3000,
 		};
 		Object.keys(options).forEach(function(k){
@@ -73,6 +74,7 @@ class devflow {
 	}
 	
 	run(){
+		this.writeDistRevision();
 		this.runBabel();
 		this.runNodemon();
 		this.runLivereload();
@@ -209,7 +211,7 @@ class devflow {
 			output: {
 				path: path.resolve(this.options.distClient),
 				filename: this.revisionFile('[name].js'),
-				publicPath: this.options.distClient+'/',
+				publicPath: this.options.publicPath,
 			},
 			
 			resolve: {
@@ -284,7 +286,7 @@ class devflow {
 							loader: 'file-loader',
 							options: {
 								name: '[name].[hash].[ext]',
-								outputPath: 'assets/',
+								outputPath: '',
 								publicPath: '',
 							}
 						}],
