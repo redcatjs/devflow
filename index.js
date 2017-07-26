@@ -101,7 +101,7 @@ class devflow {
 			script: path.join(this.options.distServer,this.options.distServerScript),
 			env: Object.assign({},process.env,{
 				NODE_PATH: this.options.distServer,
-				DEBUG: 'socket.io*',
+				//DEBUG: 'socket.io*',
 			}),
 		});
 		nodemon.on('restart',function(){
