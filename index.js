@@ -100,7 +100,8 @@ class devflow {
 			watch: [ this.options.distServer ],
 			script: path.join(this.options.distServer,this.options.distServerScript),
 			env: Object.assign({},process.env,{
-				NODE_PATH: this.options.distServer
+				NODE_PATH: this.options.distServer,
+				DEBUG: 'socket.io*',
 			}),
 		});
 		nodemon.on('restart',function(){
