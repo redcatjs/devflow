@@ -7,6 +7,7 @@ const hashFiles = require('hash-files');
 const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const DotenvWebpack = require('dotenv-webpack');
 
 process.NODE_ENV = 'developement';
 
@@ -231,6 +232,7 @@ class devflow {
 			},
 			
 			plugins: [
+				new DotenvWebpack(),
 				new webpack.optimize.CommonsChunkPlugin({
 					name: 'vendor',
 					filename: this.revisionFile("vendor.js"),

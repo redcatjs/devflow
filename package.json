@@ -11,6 +11,7 @@
     "babel-loader": "^7.1.1",
     "chalk": "^2.0.1",
     "css-loader": "^0.28.4",
+    "dotenv-webpack": "^1.5.4",
     "ejs-compiled-loader": "^1.1.0",
     "expose-loader": "^0.7.3",
     "extract-text-webpack-plugin": "^3.0.0",
