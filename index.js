@@ -132,10 +132,12 @@ class devflow {
 				if(this.nodeOnline){
 					clearInterval(reloader);
 					
-					this.log('send livereload to browser');
-					while(this.liveReloadPaths.length){
-						let fpath = this.liveReloadPaths.shift();
-						livereload.filterRefresh( fpath );
+					if(this.liveReloadPaths.length){
+						this.log('send livereload to browser');
+						while(this.liveReloadPaths.length){
+							let fpath = this.liveReloadPaths.shift();
+							livereload.filterRefresh( fpath );
+						}
 					}
 				}
 			}.bind(this),100);
