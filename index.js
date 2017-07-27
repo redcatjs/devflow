@@ -445,16 +445,16 @@ class devflow {
 			file = this.resolveRelativePath(file, true);
 			let query = {};
 			deps.forEach(function(dep,i){
-				dep = resolveRelativePath(dep);
+				dep = this.resolveRelativePath(dep);
 				let k = '__required._'+i;
 				query[k] = dep;
-			});
+			}.bind(this));
 			webpackConfig.module.rules.push({
 				test: file,
 				loader: 'imports-loader',
 				query: query,
 			});
-		});
+		}.bind(this));
 	}
 	
 }
