@@ -226,6 +226,10 @@ class devflow {
 				],
 			},
 			
+			node: {
+				fs: 'empty'
+			},
+			
 			plugins: [
 				new webpack.optimize.CommonsChunkPlugin({
 					name: 'vendor',
