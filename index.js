@@ -20,7 +20,8 @@ class devflow {
 			distServer: 'dist.server',
 			distServerScript: 'server.js',
 			distClient: 'dist.client',
-			distClientScript: 'client.js',
+			//distClientScript: 'client.js',
+			distClientScript: null,
 			publicPath: 'assets/',
 			serverPort: 3000,
 		};
@@ -205,13 +206,17 @@ class devflow {
 	
 	webpackConfig(config, extra){
 		process.env.NODE_ENV = process.env.NODE_ENV || "development";
-
+		
+		let entry = {};
+		if(this.options.distClientScript){
+			entry.app = [ './'+this.options.distClientScript];
+		}
+		
+		
 		let configDefault = {
 			
 			context: path.resolve(process.cwd(), this.options.srcPath),
-			entry: {
-				app: [ './'+this.options.distClientScript ],
-			},
+			entry: entry,
 			output: {
 				path: path.resolve(this.options.distClient),
 				filename: this.revisionFile('[name].js'),
@@ -256,10 +261,16 @@ class devflow {
 						loader: "babel-loader",
 						query: {
 							plugins: [
-								'transform-class-properties',
-								'transform-runtime'
+								"transform-class-properties",
+								"transform-runtime"
 							],
-							presets: ['stage-0']
+							presets: [
+								"stage-0",
+								"env",
+								"stage-1",
+								"react",
+							],
+							cacheDirectory: true,
 						}
 					},
 					{
