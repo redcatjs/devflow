@@ -286,14 +286,14 @@ class devflow {
 					},
 					
 					{
-						test: /^(?!.*?\.module).*\.css$/,
+						test: /(?!.*?\.module).*\.css$/,
 						use: ExtractTextPlugin.extract({
 							fallback: 'style-loader',
 							use: 'css-loader',
 						}),
 					},
 					{
-						test: /^(?!.*?\.module).*\.(sass|scss)$/,
+						test: /(?!.*?\.module).*\.(sass|scss)$/,
 						use: ExtractTextPlugin.extract({
 							fallback: 'style-loader',
 							use: [
@@ -304,7 +304,7 @@ class devflow {
 					},
 					
 					{
-						test: /^\.module\.css$/,
+						test: /\.module\.css$/,
 						use: ExtractTextPlugin.extract({
 							fallback: 'style-loader',
 							use: [
@@ -318,7 +318,7 @@ class devflow {
 						}),
 					},
 					{
-						test: /^\.module\.(sass|scss)$/,
+						test: /\.module\.(sass|scss)$/,
 						use: ExtractTextPlugin.extract({
 							fallback: 'style-loader',
 							use: [
