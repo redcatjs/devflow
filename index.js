@@ -291,11 +291,16 @@ class devflow {
 						test: /(?!.*?\.module).*\.css$/,
 						use: ExtractTextPlugin.extract({
 							fallback: 'style-loader',
-							use: {
-								loader: 'css-loader',
-								sourceMap: dev,
-								minimize: !dev,
-							},
+							use: [
+								{
+									loader: 'css-loader',
+									options: {
+										sourceMap: dev,
+										minimize: !dev,
+										//importLoaders: 0,
+									},
+								},
+							],
 						}),
 					},
 					{
@@ -305,8 +310,11 @@ class devflow {
 							use: [
 								{
 									loader: 'css-loader',
-									sourceMap: dev,
-									minimize: !dev,
+									options: {
+										sourceMap: dev,
+										minimize: !dev,
+										//importLoaders: 1,
+									},
 								},
 								'sass-loader',
 							]
@@ -325,6 +333,7 @@ class devflow {
 										minimize: !dev,
 										modules: true,
 										camelCase: true,
+										//importLoaders: 0,
 									}
 								}
 							],
@@ -342,6 +351,7 @@ class devflow {
 										minimize: !dev,
 										modules: true,
 										camelCase: true,
+										//importLoaders: 1,
 									}
 								},
 								'sass-loader',
