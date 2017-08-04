@@ -291,40 +291,6 @@ class devflow {
 					},
 					
 					{
-						test: /(?!.*?\.module).*\.css$/,
-						use: ExtractTextPlugin.extract({
-							fallback: 'style-loader',
-							use: [
-								{
-									loader: 'css-loader',
-									options: {
-										sourceMap: dev,
-										minimize: !dev,
-										importLoaders: 0,
-									},
-								},
-							],
-						}),
-					},
-					{
-						test: /(?!.*?\.module).*\.(sass|scss)$/,
-						use: ExtractTextPlugin.extract({
-							fallback: 'style-loader',
-							use: [
-								{
-									loader: 'css-loader',
-									options: {
-										sourceMap: dev,
-										minimize: !dev,
-										importLoaders: 1,
-									},
-								},
-								'sass-loader',
-							]
-						}),
-					},
-					
-					{
 						test: /\.module\.css$/,
 						use: ExtractTextPlugin.extract({
 							fallback: 'style-loader',
@@ -358,6 +324,40 @@ class devflow {
 										camelCase: true,
 										importLoaders: 1,
 									}
+								},
+								'sass-loader',
+							]
+						}),
+					},
+					
+					{
+						test: /^(?!.*?\.module).*\.css$/,
+						use: ExtractTextPlugin.extract({
+							fallback: 'style-loader',
+							use: [
+								{
+									loader: 'css-loader',
+									options: {
+										sourceMap: dev,
+										minimize: !dev,
+										importLoaders: 0,
+									},
+								},
+							],
+						}),
+					},
+					{
+						test: /^(?!.*?\.module).*\.(sass|scss)$/,
+						use: ExtractTextPlugin.extract({
+							fallback: 'style-loader',
+							use: [
+								{
+									loader: 'css-loader',
+									options: {
+										sourceMap: dev,
+										minimize: !dev,
+										importLoaders: 1,
+									},
 								},
 								'sass-loader',
 							]
