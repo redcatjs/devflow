@@ -311,7 +311,8 @@ class devflow {
 								{
 									loader: 'css-loader',
 									options: {
-										modules: true
+										modules: true,
+										camelCase: true,
 									}
 								}
 							],
@@ -325,7 +326,8 @@ class devflow {
 								{
 									loader: 'css-loader',
 									options: {
-										modules: true
+										modules: true,
+										camelCase: true,
 									}
 								},
 								'sass-loader',
