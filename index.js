@@ -252,7 +252,10 @@ class devflow {
 						return module.resource && ( /node_modules/.test(module.resource) || /vendor/.test(module.resource) );
 					}
 				}),			
-				new ExtractTextPlugin( this.revisionFile( '[name].css' ) ),
+				new ExtractTextPlugin({
+					filename: this.revisionFile( '[name].css' ),
+					allChunks: true
+				}),
 			],
 			
 			module: {
