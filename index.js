@@ -207,6 +207,8 @@ class devflow {
 	webpackConfig(config, extra){
 		process.env.NODE_ENV = process.env.NODE_ENV || "development";
 		
+		let dev = process.NODE_ENV == 'development';
+		
 		let entry = {};
 		if(this.options.distClientScript){
 			entry.app = [ './'+this.options.distClientScript];
@@ -289,7 +291,11 @@ class devflow {
 						test: /(?!.*?\.module).*\.css$/,
 						use: ExtractTextPlugin.extract({
 							fallback: 'style-loader',
-							use: 'css-loader',
+							use: {
+								loader: 'css-loader',
+								sourceMap: dev,
+								minimize: !dev,
+							},
 						}),
 					},
 					{
@@ -297,7 +303,11 @@ class devflow {
 						use: ExtractTextPlugin.extract({
 							fallback: 'style-loader',
 							use: [
-								'css-loader',
+								{
+									loader: 'css-loader',
+									sourceMap: dev,
+									minimize: !dev,
+								},
 								'sass-loader',
 							]
 						}),
@@ -311,6 +321,8 @@ class devflow {
 								{
 									loader: 'css-loader',
 									options: {
+										sourceMap: dev,
+										minimize: !dev,
 										modules: true,
 										camelCase: true,
 									}
@@ -326,6 +338,8 @@ class devflow {
 								{
 									loader: 'css-loader',
 									options: {
+										sourceMap: dev,
+										minimize: !dev,
 										modules: true,
 										camelCase: true,
 									}
