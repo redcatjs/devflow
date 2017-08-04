@@ -284,15 +284,16 @@ class devflow {
 							}
 						]
 					},
+					
 					{
-						test: /\.css$/,
+						test: /^(?!.*?\.module).*\.css$/,
 						use: ExtractTextPlugin.extract({
 							fallback: 'style-loader',
 							use: 'css-loader',
 						}),
 					},
 					{
-						test: /\.(sass|scss)$/,
+						test: /^(?!.*?\.module).*\.(sass|scss)$/,
 						use: ExtractTextPlugin.extract({
 							fallback: 'style-loader',
 							use: [
@@ -301,6 +302,37 @@ class devflow {
 							]
 						}),
 					},
+					
+					{
+						test: /^\.module\.css$/,
+						use: ExtractTextPlugin.extract({
+							fallback: 'style-loader',
+							use: [
+								{
+									loader: 'css-loader',
+									options: {
+										modules: true
+									}
+								}
+							],
+						}),
+					},
+					{
+						test: /^\.module\.(sass|scss)$/,
+						use: ExtractTextPlugin.extract({
+							fallback: 'style-loader',
+							use: [
+								{
+									loader: 'css-loader',
+									options: {
+										modules: true
+									}
+								},
+								'sass-loader',
+							]
+						}),
+					},
+					
 					{
 						test: /\.json$/,
 						loader: "json-loader"
