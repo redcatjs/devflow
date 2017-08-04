@@ -297,7 +297,7 @@ class devflow {
 									options: {
 										sourceMap: dev,
 										minimize: !dev,
-										//importLoaders: 0,
+										importLoaders: 0,
 									},
 								},
 							],
@@ -313,7 +313,7 @@ class devflow {
 									options: {
 										sourceMap: dev,
 										minimize: !dev,
-										//importLoaders: 1,
+										importLoaders: 1,
 									},
 								},
 								'sass-loader',
@@ -333,7 +333,7 @@ class devflow {
 										minimize: !dev,
 										modules: true,
 										camelCase: true,
-										//importLoaders: 0,
+										importLoaders: 0,
 									}
 								}
 							],
@@ -351,7 +351,7 @@ class devflow {
 										minimize: !dev,
 										modules: true,
 										camelCase: true,
-										//importLoaders: 1,
+										importLoaders: 1,
 									}
 								},
 								'sass-loader',
