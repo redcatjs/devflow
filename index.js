@@ -351,7 +351,7 @@ class devflow {
 										sourceMap: dev,
 										minimize: !dev,
 										modules: true,
-										localIdentName: '[path][name]__[local]--[hash:base64:5]'
+										localIdentName: '[path][name]__[local]--[hash:base64:5]',
 										camelCase: true,
 										importLoaders: 1,
 									}
