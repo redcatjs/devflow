@@ -325,7 +325,12 @@ class devflow {
 										importLoaders: 1,
 									}
 								},
-								'sass-loader',
+								{
+									loader: 'sass-loader',
+									options: {
+										sourceMap: dev
+									},
+								},
 							]
 						}),
 					},
@@ -359,7 +364,12 @@ class devflow {
 										importLoaders: 1,
 									},
 								},
-								'sass-loader',
+								{
+									loader: 'sass-loader',
+									options: {
+										sourceMap: dev
+									},
+								},
 							]
 						}),
 					},
