@@ -18,7 +18,7 @@ class devflow {
 		this.options = {
 			srcPath: 'app',
 			distServer: 'dist.server',
-			distServerScript: 'server.js',
+			distServerScript: 'server/index.js',
 			distClient: 'dist.client',
 			//distClientScript: 'client.js',
 			distClientScript: null,
