@@ -214,18 +214,6 @@ class devflow {
 			entry.app = [ './'+this.options.distClientScript];
 		}
 		
-		let postcssLoader = {
-			loader: 'postcss-loader',
-			options: {
-				sourceMap: true,
-				plugins: function() {
-					return [
-						require('postcss-cssnext')(),
-					]
-				}
-			},
-		};
-		
 		let configDefault = {
 			
 			context: path.resolve(process.cwd(), this.options.srcPath),
@@ -317,7 +305,9 @@ class devflow {
 										importLoaders: 0,
 									}
 								},
-								postcssLoader,
+								{
+									loader: 'postcss-loader',
+								},
 							],
 						}),
 					},
@@ -337,7 +327,9 @@ class devflow {
 										importLoaders: 1,
 									}
 								},
-								postcssLoader,
+								{
+									loader: 'postcss-loader',
+								},
 								{
 									loader: 'sass-loader',
 									options: {
@@ -361,7 +353,9 @@ class devflow {
 										importLoaders: 0,
 									},
 								},
-								postcssLoader
+								{
+									loader: 'postcss-loader',
+								},
 							],
 						}),
 					},
@@ -378,7 +372,9 @@ class devflow {
 										importLoaders: 1,
 									},
 								},
-								postcssLoader,
+								{
+									loader: 'postcss-loader',
+								},
 								{
 									loader: 'sass-loader',
 									options: {
@@ -410,7 +406,7 @@ class devflow {
 						use: [{
 							loader: 'ejs-compiled-loader',
 							options: {
-								htmlmin: true, // or enable here  
+								htmlmin: true, // or enable here	
 								htmlminOptions: {
 									removeComments: true
 								}
@@ -454,13 +450,16 @@ class devflow {
 				}));
 				config.module.rules.push({
 					test: require.resolve('jquery'),
-					use: [{
-						  loader: 'expose-loader',
-						  options: 'jQuery'
-					  },{
-						  loader: 'expose-loader',
-						  options: '$'
-					  }]
+					use: [
+						{
+							loader: 'expose-loader',
+							options: 'jQuery'
+						},
+						{
+							loader: 'expose-loader',
+							options: '$'
+						}
+					]
 				});
 			}
 			
