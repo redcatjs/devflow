@@ -305,7 +305,13 @@ class devflow {
 										camelCase: true,
 										importLoaders: 0,
 									}
-								}
+								},
+								{
+									loader: 'postcss-loader',
+									options: {
+										sourceMap: true
+									}
+								},
 							],
 						}),
 					},
@@ -323,6 +329,12 @@ class devflow {
 										localIdentName: '[path][name]__[local]--[hash:base64:5]',
 										camelCase: true,
 										importLoaders: 1,
+									}
+								},
+								{
+									loader: 'postcss-loader',
+									options: {
+										sourceMap: true
 									}
 								},
 								{
@@ -348,6 +360,12 @@ class devflow {
 										importLoaders: 0,
 									},
 								},
+								{
+									loader: 'postcss-loader',
+									options: {
+										sourceMap: true
+									}
+								},
 							],
 						}),
 					},
@@ -363,6 +381,12 @@ class devflow {
 										minimize: !dev,
 										importLoaders: 1,
 									},
+								},
+								{
+									loader: 'postcss-loader',
+									options: {
+										sourceMap: true
+									}
 								},
 								{
 									loader: 'sass-loader',
