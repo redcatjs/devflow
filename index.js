@@ -207,6 +207,8 @@ class devflow {
 	webpackConfig(config, extra){
 		process.env.NODE_ENV = process.env.NODE_ENV || "development";
 		
+		let postcss = fs.existsSync(path.resolve(process.cwd(), 'postcss.config.js'));
+		
 		let dev = process.NODE_ENV == 'development';
 		
 		let entry = {};
@@ -305,7 +307,7 @@ class devflow {
 										importLoaders: 0,
 									}
 								},
-								{
+								postcss && {
 									loader: 'postcss-loader',
 								},
 							],
@@ -327,7 +329,7 @@ class devflow {
 										importLoaders: 1,
 									}
 								},
-								{
+								postcss && {
 									loader: 'postcss-loader',
 								},
 								{
@@ -353,7 +355,7 @@ class devflow {
 										importLoaders: 0,
 									},
 								},
-								{
+								postcss && {
 									loader: 'postcss-loader',
 								},
 							],
@@ -372,7 +374,7 @@ class devflow {
 										importLoaders: 1,
 									},
 								},
-								{
+								postcss && {
 									loader: 'postcss-loader',
 								},
 								{
