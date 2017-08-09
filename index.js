@@ -220,7 +220,7 @@ class devflow {
 				sourceMap: true,
 				plugins: function() {
 					return [
-						require('postcss-cssnext'),
+						require('postcss-cssnext')(),
 					]
 				}
 			},
