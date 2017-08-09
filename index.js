@@ -217,13 +217,13 @@ class devflow {
 		let postcssLoader = {
 			loader: 'postcss-loader',
 			options: {
-				sourceMap: true
+				sourceMap: true,
+				plugins: function() {
+					return [
+						require('postcss-cssnext'),
+					]
+				}
 			},
-			plugins: function() {
-				return [
-					require('postcss-cssnext'),
-				]
-			}
 		};
 		
 		let configDefault = {
@@ -275,7 +275,7 @@ class devflow {
 						test: /\.(js|jsx)?$/,
 						exclude: /node_modules/,
 						loader: "babel-loader",
-						query: {
+						options: {
 							plugins: [
 								"transform-class-properties",
 								"transform-runtime"
