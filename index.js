@@ -214,6 +214,17 @@ class devflow {
 			entry.app = [ './'+this.options.distClientScript];
 		}
 		
+		let postcssLoader = {
+			loader: 'postcss-loader',
+			options: {
+				sourceMap: true
+			},
+			plugins: function() {
+				return [
+					require('postcss-cssnext'),
+				]
+			}
+		};
 		
 		let configDefault = {
 			
@@ -306,12 +317,7 @@ class devflow {
 										importLoaders: 0,
 									}
 								},
-								{
-									loader: 'postcss-loader',
-									options: {
-										sourceMap: true
-									}
-								},
+								postcssLoader,
 							],
 						}),
 					},
@@ -331,12 +337,7 @@ class devflow {
 										importLoaders: 1,
 									}
 								},
-								{
-									loader: 'postcss-loader',
-									options: {
-										sourceMap: true
-									}
-								},
+								postcssLoader,
 								{
 									loader: 'sass-loader',
 									options: {
@@ -360,12 +361,7 @@ class devflow {
 										importLoaders: 0,
 									},
 								},
-								{
-									loader: 'postcss-loader',
-									options: {
-										sourceMap: true
-									}
-								},
+								postcssLoader
 							],
 						}),
 					},
@@ -382,12 +378,7 @@ class devflow {
 										importLoaders: 1,
 									},
 								},
-								{
-									loader: 'postcss-loader',
-									options: {
-										sourceMap: true
-									}
-								},
+								postcssLoader,
 								{
 									loader: 'sass-loader',
 									options: {
