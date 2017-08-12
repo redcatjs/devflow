@@ -307,9 +307,9 @@ class devflow {
 										importLoaders: 0,
 									}
 								},
-								postcss && {
+								...(postcss ? [{
 									loader: 'postcss-loader',
-								},
+								}] : []),
 							],
 						}),
 					},
@@ -329,9 +329,9 @@ class devflow {
 										importLoaders: 1,
 									}
 								},
-								postcss && {
+								...(postcss ? [{
 									loader: 'postcss-loader',
-								},
+								}] : []),
 								{
 									loader: 'sass-loader',
 									options: {
@@ -355,9 +355,9 @@ class devflow {
 										importLoaders: 0,
 									},
 								},
-								postcss && {
+								...(postcss ? [{
 									loader: 'postcss-loader',
-								},
+								}] : []),
 							],
 						}),
 					},
@@ -374,9 +374,9 @@ class devflow {
 										importLoaders: 1,
 									},
 								},
-								postcss && {
+								...(postcss ? [{
 									loader: 'postcss-loader',
-								},
+								}] : []),
 								{
 									loader: 'sass-loader',
 									options: {
