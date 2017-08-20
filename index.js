@@ -52,7 +52,7 @@ class devflow {
 			this.waitForNodeOnlineReq = false;
 			if(res.statusCode==200){
 				this.nodeOnline = true;
-				this.log('node server online');
+				//this.log('node server online');
 			}
 			else{
 				setTimeout(function(){
@@ -302,7 +302,7 @@ class devflow {
 										sourceMap: dev,
 										minimize: !dev,
 										modules: true,
-										localIdentName: '[path][name]__[local]--[hash:base64:5]',
+										localIdentName: '[name]__[local]--[hash:base64:5]',
 										camelCase: true,
 										importLoaders: 0,
 									}
@@ -324,7 +324,7 @@ class devflow {
 										sourceMap: dev,
 										minimize: !dev,
 										modules: true,
-										localIdentName: '[path][name]__[local]--[hash:base64:5]',
+										localIdentName: '[name]__[local]--[hash:base64:5]',
 										camelCase: true,
 										importLoaders: 1,
 									}
