@@ -268,13 +268,15 @@ class devflow {
 						options: {
 							plugins: [
 								"transform-class-properties",
-								"transform-runtime"
+								"transform-runtime",
+								"transform-export-extensions",
 							],
 							presets: [
 								"stage-0",
 								"env",
-								"stage-1",
 								"react",
+								"es2016",
+								"es2017",
 							],
 							cacheDirectory: true,
 						}
