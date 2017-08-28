@@ -16,10 +16,11 @@ class devflow {
 	constructor(options){
 		options = options || {};
 		this.options = {
-			srcPath: 'app',
-			distServer: 'dist.server',
-			distServerScript: 'server/index.js',
-			distClient: 'dist.client',
+			srcServer: 'app-server',
+			srcClient: 'app-client',
+			distServer: 'dist-server',
+			distServerScript: 'index.js',
+			distClient: 'dist-client',
 			//distClientScript: 'client.js',
 			distClientScript: null,
 			publicPath: 'assets/',
@@ -86,8 +87,10 @@ class devflow {
 	runBabel(){
 		this.log('babel - compilation');
 		let babelBin = path.resolve('node_modules/babel-cli/bin/babel.js');
-		let args = [ this.options.srcPath, '-d',this.options.distServer, '--copy-files', '--source-maps inline' ];
-		execSync(babelBin+' '+args.join(' '), { stdio: 'inherit' });
+		let args = [ this.options.srcServer, '-d',this.options.distServer, '--copy-files', '--source-maps inline' ];
+		let exec = babelBin+' '+args.join(' ');
+		console.log(exec);
+		execSync(exec, { stdio: 'inherit' });
 		
 		this.log('babel - start watcher');
 		spawn( babelBin, [...args, '--watch','--skip-initial-build'], {
@@ -218,7 +221,7 @@ class devflow {
 		
 		let configDefault = {
 			
-			context: path.resolve(process.cwd(), this.options.srcPath),
+			context: path.resolve(process.cwd(), this.options.srcClient),
 			entry: entry,
 			output: {
 				path: path.resolve(this.options.distClient),
@@ -228,9 +231,10 @@ class devflow {
 			
 			resolve: {
 				symlinks: true,
-				alias: {},
+				alias: {
+					
+				},
 				modules: [
-					this.options.srcPath,
 					'node_modules',
 				],
 			},
@@ -273,12 +277,12 @@ class devflow {
 							],
 							presets: [
 								"stage-0",
+								"es2015",
 								"env",
 								"react",
-								"es2016",
-								"es2017",
 							],
 							cacheDirectory: true,
+							babelrc: false,
 						}
 					},
 					{
