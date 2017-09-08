@@ -21,7 +21,6 @@ class devflow {
 			distServer: 'dist-server',
 			distServerScript: 'index.js',
 			distClient: 'dist-client',
-			//distClientScript: 'client.js',
 			distClientScript: null,
 			publicPath: 'assets/',
 			serverPort: 3000,
@@ -177,6 +176,7 @@ class devflow {
 	runWebpackCLI(){
 		spawn( path.resolve('node_modules/webpack/bin/webpack.js'), ['--watch'], {
 			stdio: 'inherit',
+			env: process.env
 		} );
 	}
 	runWebpackNode(){
