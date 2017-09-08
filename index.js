@@ -224,7 +224,7 @@ class devflow {
 		Object.keys(process.env).forEach(function(k){
 			processEnv[k] = JSON.stringify(process.env[k]);
 		});
-		processEnv.APP_ENV = JSON.stringify('browser'),
+		processEnv.APP_ENV = JSON.stringify('browser');
 		
 		let configDefault = {
 			
