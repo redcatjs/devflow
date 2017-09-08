@@ -173,6 +173,7 @@ class devflow {
 		
 	}
 	
+	
 	runWebpackCLI(){
 		spawn( path.resolve('node_modules/webpack/bin/webpack.js'), ['--watch'], {
 			stdio: 'inherit',
@@ -219,6 +220,12 @@ class devflow {
 			entry.app = [ './'+this.options.distClientScript];
 		}
 		
+		let processEnv = {};
+		Object.keys(process.env).forEach(function(k){
+			processEnv[k] = JSON.stringify(process.env[k]);
+		});
+		processEnv.APP_ENV = JSON.stringify('browser'),
+		
 		let configDefault = {
 			
 			context: path.resolve(process.cwd(), this.options.srcClient),
@@ -245,9 +252,7 @@ class devflow {
 			
 			plugins: [
 				new webpack.DefinePlugin({
-					'process.env': {
-						APP_ENV: JSON.stringify('browser'),
-					}
+					'process.env': processEnv
 				}),
 				new DotenvWebpack(),
 				new webpack.optimize.CommonsChunkPlugin({
