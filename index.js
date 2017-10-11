@@ -24,6 +24,9 @@ class devflow {
 			distClientScript: null,
 			publicPath: 'assets/',
 			serverPort: 3000,
+			livereload: true,
+			livereloadPort: process.env.LIVERELOAD_PORT || 35729,
+			
 		};
 		Object.keys(options).forEach(function(k){
 			this.options[k] = options[k];
@@ -79,7 +82,9 @@ class devflow {
 		this.writeDistRevision();
 		this.runBabel();
 		this.runNodemon();
-		this.runLivereload();
+		if(this.livereload){
+			this.runLivereload();
+		}
 		this.runWebpack();
 	}
 	
@@ -122,6 +127,7 @@ class devflow {
 		const livereload = require('livereload').createServer({
 			applyCSSLive: true,
 			applyImgLive: true,
+			port: this.livereloadPort
 		});
 		
 		const chokidar = require('chokidar');
